@@ -47,8 +47,6 @@ For your second milestone, explain what you've worked on since your previous mil
 <iframe width="560" height="315" src="https://www.youtube.com/embed/aEf3GukpSwU?si=DCKOJWaheYtPWD5-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
-
-
 For my first milestone, almost everything went wrong. My original plan was to finish half of my code and the majority of my circuitry, but instead I ran into a lot of errors. To start off, my project is an ESP32 weather station, and I chose this project to make an impact on my community and help it in a better way. Unfortunately, I made no progress on my circuitry or code this entire week, but I learned a lot about different ways of debugging problems and creative solutions that I can use. There were many problems that I faced this week, the main one being that my computer would not pick up the readings from my ESP32. Eventually, we found out that it was a driver issue, so we ended up downloading the correct driver, which was the CP210x driver. After adding this, my code finally uploaded, and the board could receive the data coming from my computer.
 Originally, I had selected the wrong board for my setup, so I thought that was the issue, but that was just one small piece of the puzzle. While that was an error, the main issue was that we didn't have the correct driver installed and that we were also missing a few components.
 
