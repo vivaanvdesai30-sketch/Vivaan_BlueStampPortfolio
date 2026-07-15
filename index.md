@@ -1,5 +1,5 @@
 # ESP32 Weather Station 
-Replace this text with a brief description (2-3 sentences) of your project. This description should draw the reader in and make them interested in what you've built. You can include what the biggest challenges, takeaways, and triumphs from completing the project were. As you complete your portfolio, remember your audience is less familiar than you are with all that your project entails!
+My project is an ESP32-based weather station that collects and displays real-time environmental data, including wind speed, temperature, humidity, air pressure, and altitude. Using an ESP32 Dev Module, a BME280 sensor, a 0.96-inch OLED display, and an anemometer, I built a  system capable of monitoring local weather conditions. Throughout the project, I overcame both hardware and programming challenges while learning how to troubleshoot Arduino in different ways, I integrated multiple sensors, and developed a reliable weather monitoring device. My experience from this was very valuable, and I truly learned a lot. 
 
 You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
 ```HTML 
