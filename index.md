@@ -33,13 +33,12 @@ For your final milestone, explain the outcome of your project. Key details to in
 
 **Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/y3VAmNlER5Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0BI4hMMGP38?si=qVwjkcHxG7Az2sML" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-For your second milestone, explain what you've worked on since your previous milestone. You can highlight:
-- Technical details of what you've accomplished and how they contribute to the final goal
-- What has been surprising about the project so far
-- Previous challenges you faced that you overcame
-- What needs to be completed before your final milestone 
+My second milestone went much better than my first, and I accomplished a lot this week. To start, I finally solved the problems I had been facing. My ESP32 board began receiving data from my computer correctly, and my code was finally working as intended.
+
+The main challenge during this milestone was the circuitry. Since my ESP32 board is slightly different from the standard version, I had to use a specific type of wire that could fit underneath the ESP32 and still connect to the breadboard. At first, my OLED display module would not turn on, but I eventually discovered that the issue was caused by incorrect wiring. Both the OLED display module and the BME280 sensor use GPIO pins 21 and 22, which are the default I2C communication pins on the ESP32. These pins allow the ESP32 to transfer data to both devices. Because I did not have enough space on my breadboard, I had to use the specialized jumper wires to connect underneath the ESP32 and into the breadboard rails. As long as the rails are connected to the correct data pins, power, voltage, and data can all be distributed and transferred throughout the breadboard and the rest of the circuit. The code itself was quite simple, and once I finished it, everything worked perfectly. I programmed the weather station to update its readings every two seconds so users have enough time to view the data without having to wait too long for fresh measurements. Looking ahead, I am looking forward to start working on my modification. My main addition will be an anemometer, which will allow the weather station to measure wind speed. I plan to display the wind speed in multiple units, including miles per hour, kilometers per hour, and meters per second.
+
 
 # First Milestone
 
@@ -55,18 +54,195 @@ Here's where you'll put images of your schematics. [Tinkercad](https://www.tinke
 # Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
-```c++
+``c++
+/*
+  BORDSTRACT Wind Speed Detector + BME280 Weather Station -> ESP32 -> 0.96" OLED
+*/
+// Including libraries
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// ---- OLED setup ----
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+#define SCREEN_ADDRESS 0x3C  
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// ---- BME280 setup ----
+Adafruit_BME280 bme; // I2C
+#define SEALEVELPRESSURE_HPA (1013.25)
+
+// ---- Anemometer setup ----
+const int anemometerPin = 34;        
+const float adcMaxVoltage = 3.3;    
+const int adcResolution = 4095;     
+const float dividerRatio = 5.6 / (1.0 + 5.6); 
+
+// ---- Calibration (update after testing your unit) ----
+const float minVoltage = 0.0;        
+const float maxVoltage = 3.8;       
+const float maxWindSpeed = 30.0;     
+const float mps_to_kmh = 3.6;
+const float mps_to_mph = 2.23694;
+
+const int numSamples = 10;         
+
+// ---- Page switching ----
+unsigned long lastPageSwitch = 0;
+const unsigned long pageInterval = 3000; // 3 seconds per page
+int currentPage = 0; // 0 = weather, 1 = wind
+
+// ---- Sensor readings, updated every loop, displayed depending on page ----
+float tempF, humidity, pressure, altitude;
+float windVoltage, windSpeedMps, windSpeedKmh, windSpeedMph;
+
+float readSensorVoltage() {
+  long sum = 0;
+  for (int i = 0; i < numSamples; i++) {
+    sum += analogRead(anemometerPin);
+    delay(2);
+  }
+  float avgReading = (float)sum / numSamples;
+  float pinVoltage = (avgReading / adcResolution) * adcMaxVoltage;
+  return pinVoltage / dividerRatio;  // undo the divider to get sensor's real voltage
+}
+
+float voltageToWindSpeed(float voltage) {
+  if (voltage < minVoltage) voltage = minVoltage;
+  if (voltage > maxVoltage) voltage = maxVoltage;
+  return (voltage - minVoltage) * (maxWindSpeed / (maxVoltage - minVoltage));
+}
+
+void updateReadings() {
+  // BME280
+  tempF = (bme.readTemperature() * 9.0 / 5.0) + 32.0;
+  humidity = bme.readHumidity();
+  pressure = bme.readPressure() / 100.0F; // hPa
+  altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
+
+  // Anemometer
+  windVoltage = readSensorVoltage();
+  windSpeedMps = voltageToWindSpeed(windVoltage);
+  windSpeedKmh = windSpeedMps * mps_to_kmh;
+  windSpeedMph = windSpeedMps * mps_to_mph;
+}
+
+void printToSerial() {
+  Serial.print("Temp: "); Serial.print(tempF); Serial.println(" *F");
+  Serial.print("Humidity: "); Serial.print(humidity); Serial.println(" %");
+  Serial.print("Pressure: "); Serial.print(pressure); Serial.println(" hPa");
+  Serial.print("Altitude: "); Serial.print(altitude); Serial.println(" m");
+  Serial.print("Wind voltage: "); Serial.print(windVoltage, 3); Serial.println(" V");
+  Serial.print("Wind speed: "); Serial.print(windSpeedMps, 2); Serial.println(" m/s");
+  Serial.println("-------------------------------------");
+}
+
+void showWeatherPage() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setCursor(0, 0);
+  display.println("--- WEATHER ---");
+
+  display.setCursor(0, 16);
+  display.print("Temp:  "); display.print(tempF, 1); display.println(" F");
+
+  display.setCursor(0, 28);
+  display.print("Hum:   "); display.print(humidity, 1); display.println(" %");
+
+  display.setCursor(0, 40);
+  display.print("Pres:  "); display.print(pressure, 1); display.println(" hPa");
+
+  display.setCursor(0, 52);
+  display.print("Alt:   "); display.print(altitude, 1); display.println(" m");
+
+  display.display();
+}
+
+void showWindPage() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setCursor(0, 0);
+  display.println("--- WIND SPEED ---");
+
+  display.setCursor(0, 16);
+  display.print("Voltage: "); display.print(windVoltage, 2); display.println(" V");
+
+  display.setTextSize(2);
+  display.setCursor(0, 28);
+  display.print(windSpeedMps, 1);
+  display.println(" m/s");
+
+  display.setTextSize(1);
+  display.setCursor(0, 48);
+  display.print(windSpeedKmh, 1); display.print(" km/h  ");
+
+  display.setCursor(0, 56);
+  display.print(windSpeedMph, 1); display.println(" mph");
+
+  display.display();
+}
+
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.println("Hello World!");
+  Serial.begin(115200);
+  delay(500);
+
+  // Shared I2C bus for BME280 and OLED
+  Wire.begin(21, 22); // SDA = GPIO21, SCL = GPIO22
+
+  // ADC setup for anemometer
+  analogReadResolution(12);
+  analogSetPinAttenuation(anemometerPin, ADC_11db); // allows reading up to ~3.3V
+
+  // Initialize BME280
+  if (!bme.begin(0x76)) {
+    Serial.println("Could not find a valid BME280 sensor, check wiring!");
+    while (1);
+  }
+
+  // Initialize OLED
+  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println("OLED allocation failed");
+    for (;;);
+  }
+
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("Weather Station");
+  display.println("Starting...");
+  display.display();
+  delay(1500);
+
+  lastPageSwitch = millis();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  updateReadings();
+  printToSerial();
 
+  // Switch pages every 3 seconds without blocking
+  if (millis() - lastPageSwitch >= pageInterval) {
+    currentPage = (currentPage + 1) % 2;
+    lastPageSwitch = millis();
+  }
+
+  if (currentPage == 0) {
+    showWeatherPage();
+  } else {
+    showWindPage();
+  }
+
+  delay(200); // 
 }
-```
 
 # Bill of Materials
 Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.
