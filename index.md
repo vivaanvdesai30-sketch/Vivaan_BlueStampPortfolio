@@ -1,11 +1,7 @@
 # ESP32 Weather Station 
 My project is an ESP32-based weather station that collects and displays real-time environmental data, including wind speed, temperature, humidity, air pressure, and altitude. Using an ESP32 Dev Module, a BME280 sensor, a 0.96-inch OLED display, and an anemometer, I built a  system capable of monitoring local weather conditions. Throughout the project, I overcame both hardware and programming challenges while learning how to troubleshoot Arduino in different ways, I integrated multiple sensors, and developed a reliable weather monitoring device. My experience from this was very valuable, and I truly learned a lot. 
 
-You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
-```HTML 
-<!--- This is an HTML comment in Markdown -->
-<!--- Anything between these symbols will not render on the published site -->
-```
+
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
@@ -17,7 +13,7 @@ You should comment out all portions of your portfolio that you have not complete
   
 # Final Milestone
 
-**Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
+
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/N9zQ_0GdV4w?si=JeCczo9aOJd6tGZL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -48,7 +44,6 @@ For my first milestone, almost everything went wrong. My original plan was to fi
 Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. 
 
 # Code
-Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
 ```c++
 /*
