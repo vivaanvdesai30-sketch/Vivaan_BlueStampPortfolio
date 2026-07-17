@@ -250,5 +250,5 @@ void loop() {
 
 # Other Resources/Examples
 - [BME280](https://randomnerdtutorials.com/esp32-bme280-arduino-ide-pressure-temperature-humidity/)
-- [BME280 and OLED](https://sviatil0.github.io/Sviatoslav_BSE/](http://community.heltec.cn/t/display-data-on-oled-from-bme280/15895))
-- [Wind Sensor and ESP32](https://arneshkumar.github.io/arneshbluestamp/](https://randomnerdtutorials.com/esp32-anemometer-wind-speed-arduino/))
+- [BME280 and OLED](http://community.heltec.cn/t/display-data-on-oled-from-bme280/15895)
+- [Wind Sensor and ESP32](https://randomnerdtutorials.com/esp32-anemometer-wind-speed-arduino/)
