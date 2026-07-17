@@ -2,7 +2,6 @@
 My project is an ESP32-based weather station that collects and displays real-time environmental data, including wind speed, temperature, humidity, air pressure, and altitude. Using an ESP32 Dev Module, a BME280 sensor, a 0.96-inch OLED display, and an anemometer, I built a  system capable of monitoring local weather conditions. Throughout the project, I overcame both hardware and programming challenges while learning how to troubleshoot Arduino in different ways, I integrated multiple sensors, and developed a reliable weather monitoring device. My experience from this was very valuable, and I truly learned a lot. 
 
 
-
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
 | Vivaan D | Rock Canyon High School| Physics and Mechanical Engineering | Incoming Sophomore
