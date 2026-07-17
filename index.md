@@ -7,9 +7,8 @@ My project is an ESP32-based weather station that collects and displays real-tim
 |:--:|:--:|:--:|:--:|
 | Vivaan D | Rock Canyon High School| Physics and Mechanical Engineering | Incoming Sophomore
 
-**Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
 
-![Headstone Image](logo.svg)
+![Headstone Image](20260717_132507.jpeg)
   
 # Final Milestone
 
